@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="inline-container">
+        <span>{{ content }}</span> <!-- Динамическое содержание страницы -->
+
+        <!-- Форма для ввода ответа пользователем -->
+        <form method="post" class="inline-form">
+            {% csrf_token %}
+            <input type="number" name="answer" step="0.5" placeholder="Введите ответ" required> <!-- Поле ввода -->
+            <button type="submit">Проверить</button> <!-- Кнопка отправки формы -->
+        </form>
+
+        {% if result_icon %}
+        <div class="result-icon">{{ result_icon }}</div> <!-- Отображение иконки результата -->
+        {% endif %}
+    </div>
+{% endblock %}
