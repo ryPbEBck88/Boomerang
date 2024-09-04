@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="inline-container">
+        <!-- Форма для ввода ответа пользователем -->
+        <form method="post" class="inline-form">
+            <input type="number" name="far_left_answer" placeholder="Введите ответ" required> <!-- Поле ввода -->
+            <input type="number" name="near_left_answer" placeholder="Введите ответ" required> <!-- Поле ввода -->
+            {% csrf_token %}
+            <span>{{ content }}</span> <!-- Динамическое содержание страницы -->
+            <input type="number" name="near_right_answer" placeholder="Введите ответ" required> <!-- Поле ввода -->
+            <input type="number" name="far_right_answer" placeholder="Введите ответ" required> <!-- Поле ввода -->
+            <button type="submit">Проверить</button> <!-- Кнопка отправки формы -->
+        </form>
+
+        {% if result_icon %}
+        <div class="result-icon">{{ result_icon }}</div> <!-- Отображение иконки результата -->
+        {% endif %}
+    </div>
+{% endblock %}
