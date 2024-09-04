@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from random import randint
+from .models import RandomNumber
 
 
 MIN_NUMBER = 1
