@@ -1,6 +1,11 @@
 from django.shortcuts import render, HttpResponse
 from random import randint
-from .models import RandomNumber
+from .models import (
+    RandomNumber,
+    BracketsRandomNumber,
+    NeighboursRandomNumber,
+    BjRandomNumber
+    )
 
 
 MIN_NUMBER = 1
@@ -33,10 +38,10 @@ def index(request):
 
 
 def brackets(request):
-    numbers = RandomNumber.objects.all()
+    numbers = BracketsRandomNumber.objects.all()
 
     if not numbers.exists() or len(numbers) != 5:  # Если нет чисел, создаем их
-        RandomNumber.generate_numbers(min_value=1, max_value=10)
+        BracketsRandomNumber.generate_numbers(min_value=1, max_value=10)
 
     # Преобразуем QuerySet в список чисел
     data = [num.number for num in numbers]
@@ -53,11 +58,11 @@ def brackets(request):
     user_answer = None
     result_icon = None
     content = f'''
-                    ({data[0]} * 5) +
-                    ({data[1]} * 8) +
-                    ({data[2]} * 11) +
-                    ({data[3]} * 17) +
-                    ({data[4]} * 35) ='''
+        ({data[0]} * 5) +
+        ({data[1]} * 8) +
+        ({data[2]} * 11) +
+        ({data[3]} * 17) +
+        ({data[4]} * 35) ='''
 
     if request.method == 'POST':
         answer = request.POST.get('answer')
@@ -81,8 +86,13 @@ def brackets(request):
     return render(request, 'testing/brackets.html', context)
 
 def bj(request):
-    random_number = CreateRandomNumber
-    data = [random_number(MIN_NUMBER, MAX_NUMBER)]
+    numbers = BjRandomNumber.objects.all()
+
+    if not numbers.exists() or len(numbers) != 5:  # Если нет чисел, создаем их
+        BjRandomNumber.generate_numbers(min_value=1, max_value=100)
+
+    # Преобразуем QuerySet в список чисел
+    data = [num.number for num in numbers]
     context = {
         'title': 'Блек Джек',
         'content': f'{data[0]} * 1,5 = '
@@ -127,7 +137,6 @@ def neighbours(request):
             try:
                 user_answer = [int(ans) for ans in answer]
                 if user_answer == correct_answer:
-                    print(user_answer, correct_answer)
                     result_icon = '✅'
                     RandomNumber.generate_numbers(min_value=0, max_value=36)  # Удаляем старые числа и создаем новые
 
