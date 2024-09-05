@@ -1,10 +1,13 @@
 from decimal import Decimal as D
 from django.shortcuts import render, HttpResponse
-from random import randint
 from .models import (
     BracketsRandomNumber,
     NeighboursRandomNumber,
-    BjRandomNumber
+    BjRandomNumber,
+    VoisinsDeZero,
+    Tier,
+    ZeroSpiel,
+    Orphelins
     )
 
 
@@ -92,7 +95,6 @@ def bj(request):
             try:
                 user_answer = D(answer)
                 if user_answer == correct_answer:
-                    print('Прошел')
                     result_icon = '✅'
                     BjRandomNumber.generate_numbers()
                     numbers = BjRandomNumber.objects.all()
@@ -168,3 +170,49 @@ def neighbours(request):
         'result_icon': result_icon,
     }
     return render(request, 'testing/neighbours.html', context)
+
+def series(request):
+    voisins_de_zero = VoisinsDeZero.objects.all()
+    tier  = Tier.objects.all()
+    orphelins = Orphelins.objects.all()
+    zero_spiel = ZeroSpiel.objects.all()
+
+    if not voisins_de_zero.exists() or not tier.exists() or orphelins.exists() or zero_spiel.exists():
+        VoisinsDeZero.generate_numbers()
+        Tier.generate_numbers()
+        Orphelins.generate_numbers()
+        ZeroSpiel.generate_numbers()
+        voisins_de_zero = VoisinsDeZero.objects.all()
+        tier  = Tier.objects.all()
+        orphelins = Orphelins.objects.all()
+        zero_spiel = ZeroSpiel.objects.all()
+
+    voisins_de_zero_number = [num.number for num in voisins_de_zero][0]
+    tier_number = [num.number for num in tier][0]
+    orphelins_number = [num.number for num in orphelins][0]
+    zero_spiel_number = [num.number for num in zero_spiel][0]
+
+    # correct_answer = ...
+
+    user_answer = None
+    result_icon = None
+
+    if request.method == 'POST':
+        answer = [
+            request.POST.get('plays_by_answer'),
+            request.POST.get('change')
+        ]
+        if not None in answer:
+            ...
+            
+    
+    content = 'series 0/2/3 ставка: 500'
+    context = {
+        'title': 'Серии',
+        'content': [voisins_de_zero_number,
+                    tier_number,
+                    orphelins_number,
+                    zero_spiel_number],
+    }
+
+    return render(request, 'testing/series.html', context)

@@ -9,4 +9,5 @@ urlpatterns = [
     path('brackets/', views.brackets, name='brackets'),
     path('bj/', views.bj, name='bj'),
     path('neighbours/', views.neighbours, name='neighbours'),
+    path('series/', views.series, name='series'),
 ]

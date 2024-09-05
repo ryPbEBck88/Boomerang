@@ -17,6 +17,7 @@ header {
     display: flex;
     justify-content: space-between; /* Логотип слева, меню справа */
     align-items: center;
+    font-size: 24px;
 }
 
 .logo a {
@@ -42,6 +43,7 @@ body {
 
 .sidebar {
     position: fixed;
+    font-size: 24px;
     top: 0;
     right: -250px;
     width: 250px;
@@ -136,14 +138,13 @@ body {
 }
 
 .content-style {
-    font-family: 'Arial', sans-serif; /* Шрифт текста */
-    font-size: 30px; /* Размер шрифта */
-    color: #333; /* Цвет текста */
-    line-height: 1.5; /* Межстрочный интервал */
-    text-align: left; /* Выравнивание текста */
-    margin: 10px 0; /* Отступы сверху и снизу */
-    padding: 5px; /* Внутренние отступы */
-    background-color: #f9f9f9; /* Цвет фона */
-    border-radius: 4px; /* Скругление углов */
-    border: 1px solid #ddd; /* Граница */
+    width: 100px;
+    height: 100px;
+    font-size: 24px;
+    text-align: center;
+    align-items: center;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    box-sizing: border-box;
 }

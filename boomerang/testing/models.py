@@ -30,3 +30,31 @@ class BjRandomNumber(RandomNumber):
     @classmethod
     def generate_numbers(cls, count=1, min_value=1, max_value=100):
         return super().generate_numbers(count, min_value, max_value)
+
+
+class VoisinsDeZero(RandomNumber):
+
+    @classmethod
+    def generate_numbers(cls, count=1, min_value=9, max_value=1700):
+        return super().generate_numbers(count, min_value, max_value)
+
+
+class Tier(RandomNumber):
+
+    @classmethod
+    def generate_numbers(cls, count=1, min_value=6, max_value=1200):
+        return super().generate_numbers(count, min_value, max_value)
+
+
+class Orphelins(RandomNumber):
+
+    @classmethod
+    def generate_numbers(cls, count=1, min_value=5, max_value=900):
+        return super().generate_numbers(count, min_value, max_value)
+
+
+class ZeroSpiel(RandomNumber):
+
+    @classmethod
+    def generate_numbers(cls, count=1, min_value=4, max_value=700):
+        return super().generate_numbers(count, min_value, max_value)

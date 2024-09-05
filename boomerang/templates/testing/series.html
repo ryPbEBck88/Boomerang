@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="inline-container">
+        <div>min: 1   max: 100   step: 1</div>
+        <span>{{ content }}</span> <!-- Динамическое содержание страницы -->
+        
+        <!-- Форма для ввода ответа пользователем -->
+        <form method="post" >
+            {% csrf_token %}
+            <input type="number" name="plays_by_answer" placeholder="Играет по:" required> <!-- Поле ввода -->
+            <input type="number" name="change" placeholder="Сдача:" required> <!-- Поле ввода -->
+            <button type="submit">Проверить</button> <!-- Кнопка отправки формы -->
+        </form>
+
+        {% if result_icon %}
+        <div class="result-icon">{{ result_icon }}</div> <!-- Отображение иконки результата -->
+        {% endif %}
+    </div>
+{% endblock %}
