@@ -75,27 +75,29 @@ def brackets(request):
 def bj(request):
     numbers = BjRandomNumber.objects.all()
 
-    if not numbers.exists() or len(numbers) != 5:  # Если нет чисел, создаем их
+    if not numbers.exists():  # Если нет чисел, создаем их
         BjRandomNumber.generate_numbers(min_value=1, max_value=100)
         numbers = BjRandomNumber.objects.all()
 
-    # Преобразуем QuerySet в список чисел
-    data = [num.number for num in numbers]
-
-    correct_answer = D(data[0]) * D(1.5)
     user_answer = None
     result_icon = None
+
+    # Преобразуем QuerySet в список чисел
+    data = [num.number for num in numbers]
+    correct_answer = D(data[0]) * D(1.5)
 
     if request.method == 'POST':
         answer = request.POST.get('answer')
         if answer is not None:
             try:
                 user_answer = D(answer)
-                print(type(correct_answer), type(user_answer))
-                print(correct_answer, user_answer, data[0])
+                print(user_answer, correct_answer)
                 if user_answer == correct_answer:
+                    print('Прошел')
                     result_icon = '✅'
-                    data = None
+                    BjRandomNumber.generate_numbers()
+                    numbers = BjRandomNumber.objects.all()
+                    data = [num.number for num in numbers]
                 else:
                     result_icon = '❌'
             except ValueError:
@@ -106,7 +108,6 @@ def bj(request):
         'title': 'Блек Джек',
         'content': f'{data[0]} * 1,5 = ',
         'result_icon': result_icon,
-        'user_answer': user_answer,
     }
     return render(request, 'testing/bj.html', context)
 
