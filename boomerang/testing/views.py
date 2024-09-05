@@ -91,7 +91,6 @@ def bj(request):
         if answer is not None:
             try:
                 user_answer = D(answer)
-                print(user_answer, correct_answer)
                 if user_answer == correct_answer:
                     print('Прошел')
                     result_icon = '✅'
