@@ -134,3 +134,16 @@ body {
     margin-top: 20px;
     font-size: 2em;
 }
+
+.content-style {
+    font-family: 'Arial', sans-serif; /* Шрифт текста */
+    font-size: 30px; /* Размер шрифта */
+    color: #333; /* Цвет текста */
+    line-height: 1.5; /* Межстрочный интервал */
+    text-align: left; /* Выравнивание текста */
+    margin: 10px 0; /* Отступы сверху и снизу */
+    padding: 5px; /* Внутренние отступы */
+    background-color: #f9f9f9; /* Цвет фона */
+    border-radius: 4px; /* Скругление углов */
+    border: 1px solid #ddd; /* Граница */
+}
