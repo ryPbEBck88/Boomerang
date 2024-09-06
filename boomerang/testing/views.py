@@ -1,5 +1,5 @@
 from decimal import Decimal as D
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render # , HttpResponse
 from .models import (
     BracketsRandomNumber,
     NeighboursRandomNumber,
@@ -8,12 +8,38 @@ from .models import (
     Tier,
     ZeroSpiel,
     Orphelins
-    )
+)
 
 
-MIN_NUMBER = 1
-MAX_NUMBER = 2
-DATA = None
+# MIN_NUMBER = 1
+# MAX_NUMBER = 2
+# DATA = None
+def calculate_the_answer(bet, series, max_bet_number=100):
+    match series:
+        case 'voisins':
+            threshold = int(D(max_bet_number) * D(13.5))
+            if bet > threshold:
+                bet -= threshold
+                return [threshold // 9 + bet // 7, bet % 7]
+            else:
+                return [bet // 9, bet % 9]
+        case 'tier':
+            return [bet // 6, bet % 6]
+        case 'orphelins':
+            threshold = max_bet_number * 5
+            if bet > threshold:
+                bet -= threshold
+                return [threshold // 5 + bet // 4, bet % 4]
+            else:
+                return [bet // 5, bet % 5]
+        case 'zero_spiel':
+            threshold = max_bet_number * 4
+            if bet  >threshold:
+                bet -= threshold
+                return [threshold // 4 + bet // 3, bet % 3]
+            else:
+                return [bet // 4, bet % 4]
+
 
 def index(request):
     context = {
@@ -177,7 +203,7 @@ def series(request):
     orphelins = Orphelins.objects.all()
     zero_spiel = ZeroSpiel.objects.all()
 
-    if not voisins_de_zero.exists() or not tier.exists() or orphelins.exists() or zero_spiel.exists():
+    if not voisins_de_zero.exists():
         VoisinsDeZero.generate_numbers()
         Tier.generate_numbers()
         Orphelins.generate_numbers()
@@ -192,27 +218,42 @@ def series(request):
     orphelins_number = [num.number for num in orphelins][0]
     zero_spiel_number = [num.number for num in zero_spiel][0]
 
-    # correct_answer = ...
+    voisins_correct_answer = calculate_the_answer(voisins_de_zero_number, 'voisins')
+    tier_correct_answer = calculate_the_answer(tier_number, 'tier')
+    orphelins_correct_answer = calculate_the_answer(orphelins_number, 'orphelins')
+    zero_spiel_correct_answer = calculate_the_answer(zero_spiel_number, 'zero_spiel')
 
-    user_answer = None
+    user_voisins_answer = None
     result_icon = None
 
     if request.method == 'POST':
-        answer = [
-            request.POST.get('plays_by_answer'),
-            request.POST.get('change')
+        voisins_answer = [
+            int(request.POST.get('plays_by_voisins')),
+            int(request.POST.get('change_voisins'))
         ]
-        if not None in answer:
-            ...
+        if voisins_answer is not None:
+            user_voisins_answer = voisins_answer
+            try:
+                if user_voisins_answer == voisins_correct_answer:
+                    result_icon = '✅'
+                    VoisinsDeZero.generate_numbers()
+                    voisins_de_zero = VoisinsDeZero.objects.all()
+                    voisins_de_zero_number = [num.number for num in voisins_de_zero][0]
+                else:
+                    result_icon = '❌'
+            except ValueError:
+                result_icon = '❌'
             
-    
-    content = 'series 0/2/3 ставка: 500'
     context = {
         'title': 'Серии',
-        'content': [voisins_de_zero_number,
-                    tier_number,
-                    orphelins_number,
-                    zero_spiel_number],
+        'voisins_content': f'voisins de zero {voisins_de_zero_number}',
+        'result_icon': result_icon,
+        'user_voisins_answer': user_voisins_answer,
+        'correct_answer': voisins_correct_answer, 
+        'tier': f'tier {tier_number}',
+        'orphelins': f'orphelins {orphelins_number}',
+        'zero_spiel': f'zero spiel {zero_spiel_number}',
+        'voisins_correct_answer': voisins_correct_answer,
     }
 
     return render(request, 'testing/series.html', context)
